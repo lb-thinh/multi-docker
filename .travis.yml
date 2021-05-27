@@ -1,0 +1,20 @@
+language: generic
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t lebaothinh/react-test -f ./client/Dockerfile.dev .
+script:
+  - docker run -e CI=true llebaothinh/react-test yarn test
+after_install:
+  - docker build -t lebaothinh/multi-client ./client
+  - docker build -t lebaothinh/multi-nginx ./nginx
+  - docker build -t lebaothinh/multi-server ./server
+  - docker build -t lebaothinh/multi-worker ./worker
+  # Login to docker on one single cmd
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin
+  # Push to docker hub
+  - docker push lebaothinh/multi-client
+  - docker push lebaothinh/multi-nginx
+  - docker push lebaothinh/multi-server
+  - docker push lebaothinh/multi-worker
