@@ -6,7 +6,7 @@ before_install:
   - docker build -t lebaothinh/react-test -f ./client/Dockerfile.dev ./client
 script:
   - docker run -e CI=true lebaothinh/react-test yarn test
-after_install:
+after_success:
   # Build production docker images
   - docker build -t lebaothinh/multi-client ./client
   - docker build -t lebaothinh/multi-nginx ./nginx
